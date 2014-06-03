@@ -1,15 +1,40 @@
-## Put comments here that give an overall description of what your
-## functions do
+## Only solves the inverse matrix when the matrix has been modified.
 
-## Write a short comment describing this function
+## Create a 4 function Cached Matrix "object" by passing in
+## a square invertible matrix.
 
-makeCacheMatrix <- function(x = matrix()) {
-
+makeCacheMatrix <- function(cMatrix = matrix()) {
+    invMatrix <- NULL
+    
+    set <- function(newMatrix) {
+        cMatrix <<- newMatrix
+        invMatrix <<- NULL
+    }
+    get <- function() cMatrix
+    setInverse <- function(newInvMatrix) invMatrix <<- newInvMatrix
+    getInverse <- function() invMatrix
+    
+    list(set = set,
+         get = get,
+         setInverse = setInverse,
+         getInverse = getInverse)
 }
 
 
-## Write a short comment describing this function
+## Returns the inverse matrix
+## Takes a makeCacheMatrix "object". Only resolves the inverse
+## matrix when the matrix has been modified.
 
-cacheSolve <- function(x, ...) {
-        ## Return a matrix that is the inverse of 'x'
+cacheSolve <- function(cMatrix, ...) {
+    invMatrix <- cMatrix$getInverse()
+    
+    if (!is.null(invMatrix)) {
+        message("getting cached inverse matrix")
+        return(invMatrix)
+    }
+    mat <- cMatrix$get()
+    invMatrix <- solve(mat)
+    cMatrix$setInverse(invMatrix)
+    invMatrix
 }
+
